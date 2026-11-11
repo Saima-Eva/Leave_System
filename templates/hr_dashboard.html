@@ -1,0 +1,15 @@
+{% extends "base.html" %}{% block body %}
+<h1>All Leave Requests</h1>
+<p>Filter:
+  <a class="btn sm {{ '' if not q else 'gray' }}" href="{{ url_for('hr_dashboard') }}">All</a>
+  {% for s in ['Pending','Approved','Rejected'] %}
+  <a class="btn sm {{ '' if q==s else 'gray' }}" href="{{ url_for('hr_dashboard', status=s) }}">{{ s }}</a>{% endfor %}</p>
+<div class="tbl"><table>
+<tr><th>#</th><th>Employee</th><th>ID</th><th>Type</th><th>From</th><th>To</th><th>Days</th><th>Status</th><th></th></tr>
+{% for r in rows %}<tr><td>{{ r.id }}</td><td>{{ r.full_name }}</td><td>{{ r.emp_id }}</td><td>{{ r.leave_type }}</td>
+<td>{{ fmt(r.start_date) }}</td><td>{{ fmt(r.end_date) }}</td><td>{{ r.leave_days }}</td>
+<td><span class="badge {{ status_of(r) }}">{{ status_of(r) }}</span></td>
+<td style="white-space:nowrap"><a class="btn sm gray" href="{{ url_for('hr_edit', lid=r.id) }}">Review</a>
+<a class="btn sm" href="{{ url_for('hr_download', lid=r.id) }}">Download .docx</a></td></tr>
+{% else %}<tr><td colspan="9">There are no requests.</td></tr>{% endfor %}
+</table></div>{% endblock %}

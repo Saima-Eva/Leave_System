@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Leave System</title>
+<style>
+  body{font-family:system-ui,Arial,sans-serif;background:#f4f6f8;margin:0;color:#222}
+  nav{background:#1b2a41;color:#fff;padding:10px 20px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+  nav a{color:#cfe0ff;text-decoration:none;font-size:14px}
+  nav .sp{flex:1}
+  nav form{margin:0}
+  nav button{background:none;border:1px solid #6b83a8;color:#fff;border-radius:6px;padding:4px 10px;cursor:pointer}
+  .wrap{max-width:900px;margin:22px auto;padding:0 16px}
+  h1{font-size:22px;margin:0 0 14px}
+  .card{background:#fff;border:1px solid #d9dee3;border-radius:8px;padding:16px 18px;margin-bottom:18px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px}
+  .full{grid-column:1/-1}
+  label{display:block;font-size:13px;margin-bottom:4px;color:#444}
+  input,select,textarea{width:100%;box-sizing:border-box;padding:8px;border:1px solid #bcc3ca;border-radius:6px;font:inherit}
+  .btn{display:inline-block;background:#1f6feb;color:#fff;border:0;border-radius:6px;padding:9px 18px;font-size:14px;cursor:pointer;text-decoration:none}
+  .btn.sm{padding:5px 10px;font-size:13px}
+  .btn.gray{background:#6b7785}
+  table{width:100%;border-collapse:collapse;background:#fff;border:1px solid #d9dee3;border-radius:8px;overflow:hidden;font-size:14px}
+  th,td{padding:9px 10px;border-bottom:1px solid #eceff2;text-align:left}
+  th{background:#eef2f6}
+  .tbl{overflow-x:auto}
+  .badge{padding:2px 9px;border-radius:12px;font-size:12px;color:#fff}
+  .Pending{background:#d98e04}.Approved{background:#1a8f4c}.Rejected{background:#c8372d}
+  .msg{padding:10px 14px;border-radius:6px;margin-bottom:14px;font-size:14px}
+  .msg.ok{background:#e3f6ea;color:#14532d}.msg.err{background:#fde8e6;color:#7a1d16}
+  .hint{font-size:12px;color:#777}
+  @media(max-width:600px){.grid{grid-template-columns:1fr}}
+</style></head><body>
+{% if user %}
+<nav>
+  <strong>Leave System</strong>
+  {% if user.role == 'hr' %}
+    <a href="{{ url_for('hr_dashboard') }}">All Requests</a>
+    <a href="{{ url_for('hr_employees') }}">Employees</a>
+  {% else %}
+    <a href="{{ url_for('my_leaves') }}">My Leaves</a>
+    <a href="{{ url_for('apply') }}">Apply for Leave</a>
+  {% endif %}
+  <span class="sp"></span>
+  <span style="font-size:13px">{{ user.full_name }}</span>
+  <a href="{{ url_for('change_password') }}">Password</a>
+  <form method="post" action="{{ url_for('logout') }}"><input type="hidden" name="csrf" value="{{ csrf }}"><button>Logout</button></form>
+</nav>
+{% endif %}
+<div class="wrap">
+  {% with msgs = get_flashed_messages(with_categories=true) %}
+    {% for cat, m in msgs %}<div class="msg {{ cat }}">{{ m }}</div>{% endfor %}
+  {% endwith %}
+  {% block body %}{% endblock %}
+</div></body></html>

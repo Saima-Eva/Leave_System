@@ -1,0 +1,27 @@
+{% extends "base.html" %}{% block body %}
+<h1>Request #{{ r.id }} <span class="badge {{ status }}">{{ status }}</span></h1>
+<div class="card"><div class="grid">
+  <div><b>Employee:</b> {{ r.full_name }} ({{ r.emp_id }})</div><div><b>Job Title:</b> {{ r.job_title }}</div>
+  <div><b>Type:</b> {{ r.leave_type }}</div><div><b>Days:</b> {{ r.leave_days }}</div>
+  <div><b>From:</b> {{ fmt(r.start_date) }}</div><div><b>To:</b> {{ fmt(r.end_date) }}</div>
+  <div><b>Return:</b> {{ fmt(r.return_date) }}</div><div><b>Address:</b> {{ r.address }}</div>
+</div></div>
+<form method="post" class="card"><input type="hidden" name="csrf" value="{{ csrf }}">
+<p class="hint">Please fill in Sections 2, 3, and 4 here, then download the Word document.</p>
+<div class="grid">
+  <div><label>Replacement Name</label><input name="replacement_name" value="{{ r.replacement_name or '' }}"></div>
+  <div><label>Manager Name</label><input name="manager_name" value="{{ r.manager_name or '' }}"></div>
+  <div><label>Leave Entitlements</label><input name="entitlement" value="{{ r.entitlement or '' }}"></div>
+  <div><label>Until the date of</label><input type="date" name="entitlement_until" value="{{ r.entitlement_until or '' }}"></div>
+  <div><label>Leave Required Period (HR)</label><input name="hr_leave_period" value="{{ r.hr_leave_period or '' }}"></div>
+  <div><label>Until the date of</label><input type="date" name="hr_period_until" value="{{ r.hr_period_until or '' }}"></div>
+  <div><label>Leave Balance</label><input name="leave_balance" value="{{ r.leave_balance or '' }}"></div>
+  <div><label>Approval</label><select name="approval">
+    <option value="" {{ 'selected' if not r.approval }}>Pending</option>
+    <option value="yes" {{ 'selected' if r.approval=='yes' }}>Yes</option>
+    <option value="no" {{ 'selected' if r.approval=='no' }}>No</option></select></div>
+</div>
+<p><button class="btn">Save</button>
+<a class="btn gray" href="{{ url_for('hr_download', lid=r.id) }}">Download .docx</a>
+<a href="{{ url_for('hr_dashboard') }}">Back</a></p>
+</form>{% endblock %}

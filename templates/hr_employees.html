@@ -1,0 +1,16 @@
+{% extends "base.html" %}{% block body %}
+<h1>Employees</h1>
+<form method="post" class="card"><input type="hidden" name="csrf" value="{{ csrf }}">
+<div class="grid">
+  <div><label>Full Name</label><input name="full_name" required></div>
+  <div><label>Employee ID</label><input name="emp_id" required></div>
+  <div><label>Job Title</label><input name="job_title"></div>
+  <div><label>Joining Date</label><input type="date" name="join_date"></div>
+  <div><label>Username</label><input name="username" required></div>
+  <div><label>Initial Password</label><input name="password" required minlength="6"></div>
+</div><p><button class="btn">Add Employee</button></p></form>
+<div class="tbl"><table><tr><th>Name</th><th>ID</th><th>Title</th><th>Joined</th><th>Username</th></tr>
+{% for r in rows %}<tr><td>{{ r.full_name }}</td><td>{{ r.emp_id }}</td><td>{{ r.job_title }}</td>
+<td>{{ fmt(r.join_date) }}</td><td>{{ r.username }}</td></tr>
+{% else %}<tr><td colspan="5">There are no employees.</td></tr>{% endfor %}
+</table></div>{% endblock %}

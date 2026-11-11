@@ -1,0 +1,29 @@
+{% extends "base.html" %}{% block body %}
+<h1>Leave Request</h1>
+<form method="post" class="card"><input type="hidden" name="csrf" value="{{ csrf }}">
+<div class="grid">
+  <div><label>Employee Name</label><input value="{{ user.full_name }}" disabled></div>
+  <div><label>Employee ID</label><input value="{{ user.emp_id or '' }}" disabled></div>
+  <div><label>Job Title</label><input value="{{ user.job_title or '' }}" disabled></div>
+  <div><label>Type of Leave</label>
+    <select name="leave_type">{% for t in types %}<option>{{ t }}</option>{% endfor %}</select></div>
+  <div><label>Start From</label><input type="date" id="start" name="start_date" min="{{ today }}" required></div>
+  <div><label>Leave End</label><input type="date" id="end" name="end_date" min="{{ today }}" required></div>
+  <div><label>Leave Required Period</label><input id="days" readonly></div>
+  <div><label>Return Date</label><input id="ret" readonly></div>
+  <div class="full"><label>Address during leave</label><textarea name="address" rows="2" required></textarea></div>
+  <div class="full hint">Note: Leave applications must be submitted at least 5 days in advance.</div>
+</div>
+<p><button class="btn">Submit Request</button></p>
+</form>
+<script>
+const s=document.getElementById('start'),e=document.getElementById('end'),
+      d=document.getElementById('days'),r=document.getElementById('ret');
+function calc(){
+  if(!s.value||!e.value){return}
+  const n=Math.round((new Date(e.value)-new Date(s.value))/86400000)+1;
+  d.value=n>0?n+' day(s)':'';
+  if(n>0){const x=new Date(e.value);x.setDate(x.getDate()+1);r.value=x.toISOString().slice(0,10)}
+}
+s.addEventListener('change',()=>{e.min=s.value;calc()});e.addEventListener('change',calc);
+</script>{% endblock %}
